@@ -1,7 +1,8 @@
 streamlit
-langchain 
+langchain
 langchain-core
 langchain-groq
-python-dotenv 
-pydantic 
+python-dotenv
+pydantic
 groq
+langfuse

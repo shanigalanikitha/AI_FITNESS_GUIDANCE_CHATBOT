@@ -1,10 +1,10 @@
-from langchain_core.prompts import PromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
+from langfuse import Langfuse
+from dotenv import load_dotenv
 
+load_dotenv()
 
-# ================= FITNESS PROMPT TEMPLATE =================
-
-fitness_template = """
-
+FALLBACK_TEMPLATE = """
 You are a professional AI Fitness Trainer and Nutrition Expert.
 
 User Fitness Level:
@@ -13,38 +13,42 @@ User Fitness Level:
 User Question:
 {question}
 
-IMPORTANT RULES:
+Return ONLY valid JSON in this format:
 
-1. Always generate:
-   - title
-   - category
-   - response
+{{
+  "title": "",
+  "category": "",
+  "response": ""
+}}
 
-2. response must ALWAYS contain detailed fitness guidance.
-
-3. Never leave response empty.
-
-4. Return ONLY valid JSON.
-
-5. Do not use markdown.
-
-6. Do not add extra explanations outside JSON.
+Important Rules:
+- Give safe fitness advice
+- Include workout, BMI, calorie, diet, or hydration guidance when relevant
+- Keep the answer clear and beginner friendly
+- Do not use markdown
+- Do not add extra text outside JSON
 
 {format_instructions}
-
 """
 
 
-# ================= PROMPT TEMPLATE =================
+def get_prompt():
+    try:
+        langfuse = Langfuse()
 
-prompt = PromptTemplate(
+        lf_prompt = langfuse.get_prompt(
+            name="fitness-guidance-prompt",
+            label="production",
+            cache_ttl_seconds=300
+        )
 
-    template=fitness_template,
+        prompt = ChatPromptTemplate.from_template(lf_prompt.prompt)
 
-    input_variables=[
-        "fitness_level",
-        "question"
-    ]
+        return prompt, lf_prompt
 
-)
+    except Exception:
+        prompt = ChatPromptTemplate.from_template(FALLBACK_TEMPLATE)
+        return prompt, None
 
+
+prompt, lf_prompt = get_prompt()
