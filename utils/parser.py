@@ -1,12 +1,8 @@
-from typing import Union, List, Optional 
 from pydantic import BaseModel
+from typing import Optional
 
 class FitnessResponse(BaseModel):
     title: Optional[str] = "Fitness Guidance"
-
     category: Optional[str] = "General Fitness"
-    
-    response: Optional[Union[str, List[str]]] = (
-        "No response generated."
-
-    )    
+    fitness_level: Optional[str] = "Beginner"
+    response: Optional[str] = "No response generated."

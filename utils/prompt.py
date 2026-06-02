@@ -18,6 +18,7 @@ Return ONLY valid JSON in this format:
 {{
   "title": "",
   "category": "",
+  "fitness_level": "",
   "response": ""
 }}
 
@@ -27,6 +28,7 @@ Important Rules:
 - Keep the answer clear and beginner friendly
 - Do not use markdown
 - Do not add extra text outside JSON
+- fitness_level must be same as the selected User Fitness Level
 
 {format_instructions}
 """

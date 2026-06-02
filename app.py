@@ -1,4 +1,5 @@
 import streamlit as st
+import json
 
 from utils.validations import validate_user_input
 from main import generate_fitness_response
@@ -95,14 +96,15 @@ def display_ai_response(question, fitness_level):
 
         st.session_state.chat_history.append(question)
 
-        st.subheader(f"🏋️ {result.title}")
+        st.subheader("📦 JSON Output")
 
-        if isinstance(result.response, list):
-            st.success("\n\n".join(result.response))
-        else:
-            st.success(result.response)
-
-        st.caption(f"Category: {result.category}")
+        st.code(
+            json.dumps(
+                result.model_dump(),
+                indent=4
+            ),
+            language="json"
+        )
 
 
 # ================= TAB 1: FITNESS CHATBOT =================
